@@ -16,11 +16,11 @@ export default {
       GRAY_400: '#B9BBBC',
       GRAY_300: '#DDDEDF',
       GRAY_200: '#EFF0F0',
-      GRAY_100: '#FAFAFA'
+      GRAY_100: '#FAFAFA',
     },
     FONT_FAMILY: {
       REGULAR: 'NunitoSans_400Regular',
-      BOLD: 'NunitoSans_700Bold'
+      BOLD: 'NunitoSans_700Bold',
     },
     FONT_SIZE: {
       XS: 12,
