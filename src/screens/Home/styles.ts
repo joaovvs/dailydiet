@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowUpRight, IconProps } from 'phosphor-react-native';
+import { ArrowUpRight } from 'phosphor-react-native';
 
 import { TouchableOpacity } from "react-native";
 

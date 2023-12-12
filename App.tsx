@@ -10,6 +10,8 @@ import {
 } from "@expo-google-fonts/nunito-sans";
 
 import { Home } from "@screens/Home";
+import { Statistics } from "@screens/Statistics";
+
 import theme from "./src/theme";
 
 export default function App() {
@@ -28,7 +30,7 @@ export default function App() {
             backgroundColor="transparent"
             translucent
           />
-          <Home/>
+          <Statistics/>
       </ThemeProvider>
     );
   }
