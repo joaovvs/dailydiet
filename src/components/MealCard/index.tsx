@@ -8,13 +8,17 @@ type Props = TouchableOpacityProps & {
     name: string,
     time: string,
     isDiet: boolean
+    handleShowMeal: () => void;
 };
 
 
 
-export function MealCard({time, name, isDiet ,...rest}: Props){
+export function MealCard({time, name, isDiet, handleShowMeal ,...rest}: Props){
+
+
     return(
-        <Container {...rest}>
+        <Container {...rest} 
+        onPress={handleShowMeal}>
             <Time>{time}</Time>
             <Divider/>
             <Title>{name}</Title>

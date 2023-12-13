@@ -1,3 +1,4 @@
+
 import { 
     Container, 
     Percent, 
@@ -16,14 +17,36 @@ import {
     BackButton,
     Icon} from "./styles";
 
+import { meal } from "src/@types/types";
+
+import { useRoute, useNavigation } from "@react-navigation/native";
+
+type RouteParams = {
+    percent: number;
+}
+
 export function Statistics(){
+    const navigation = useNavigation();
+
+    const route = useRoute();
+    const { percent } = route.params as RouteParams;
+    
+    function handleBack(){
+        navigation.navigate('home');
+    }
+
+    function countMeals(){
+
+    } 
+
     return(
-        <Container isDiet={false}>
-            <Percent isDiet={false}>
-                <PercentTitle>90,86%</PercentTitle>
+        <Container isDiet={percent > 50 ? true: false}>
+            <Percent isDiet={percent > 50 ? true: false}>
+                <PercentTitle>{`${percent}%`}</PercentTitle>
                 <PercentSubtitle>das refeições dentro da dieta</PercentSubtitle>
-                <BackButton>
-                    <Icon isDiet={false}/>
+                <BackButton
+                    onPress={handleBack}>
+                    <Icon isDiet={percent > 50 ? true: false}/>
                 </BackButton>
             </Percent>
             <Content>
@@ -34,7 +57,7 @@ export function Statistics(){
                         <ValueSubtitle>melhor sequência de pratos dentro da dieta</ValueSubtitle>
                     </Sequence>
                     <Total>
-                        <ValueTitle>109</ValueTitle>
+                        <ValueTitle>{}</ValueTitle>
                         <ValueSubtitle>refeições registradas</ValueSubtitle>
                     </Total>
                     <Info>

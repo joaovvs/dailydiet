@@ -4,12 +4,11 @@ import { Image } from "react-native";
 import dietImg from '@assets/diet-illustration.png'
 import notDietImg from '@assets/notdiet-illustration.png'
 import { ButtonIcon } from "@components/ButtonIcon";
+import { useState } from "react";
 
-type Props = {
-    isDiet: boolean;
-}
-export function Feedback({isDiet= true}: Props){
 
+export function Feedback(){
+    const [isDiet, setIsDiet] = useState(false);
     function feedbackSubtitleText(){
         if(isDiet){
             return( 

@@ -11,13 +11,19 @@ import { Header } from "@components/Header";
 import { ButtonIcon } from "@components/ButtonIcon";
 import { Tag } from "@components/Tag";
 
-import { Alert, View, Modal } from "react-native";
+import { Alert, View } from "react-native";
 
-
+import { useNavigation } from "@react-navigation/native";
 
 
 
 export function Show(){
+
+    const navigation = useNavigation();
+
+    function handleShowEdit(){
+        navigation.navigate('edit');
+    }
 
     async function handleMealRemove(){
         Alert.alert('Deseja realmente remover o registro de refeição?','', [
@@ -25,6 +31,7 @@ export function Show(){
             {text: 'Sim, remover', onPress: () =>{}},
         ]);
     }
+
 
     return(
         <Container type={'NOTDIET'}>
@@ -41,9 +48,14 @@ export function Show(){
                     </View>
                     <Tag type="NOTDIET"/>
                 </Info>
-                
+
                 <View style={{gap: 8}}>
-                    <ButtonIcon title='Editar refeição' type="edit"/>
+                    <ButtonIcon 
+                        title='Editar refeição' 
+                        type="edit"
+                        onPress={handleShowEdit}/>
+                    
+                    
                     <ButtonIcon 
                         title='excluir refeição' 
                         type="remove"

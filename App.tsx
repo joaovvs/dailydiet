@@ -10,12 +10,8 @@ import {
   NunitoSans_700Bold,
 } from "@expo-google-fonts/nunito-sans";
 
-import { Home } from "@screens/Home";
-import { Statistics } from "@screens/Statistics";
-import { Create } from "@screens/Create";
-import { Feedback } from "@screens/Feedback";
-import { Show } from "@screens/Show";
-import { Edit } from "@screens/Edit";
+import { Routes } from "./src/routes";
+
 
 import theme from "./src/theme";
 
@@ -35,7 +31,7 @@ export default function App() {
             backgroundColor="transparent"
             translucent
           />
-          <Edit/>
+          <Routes/>
       </ThemeProvider>
     );
   }
