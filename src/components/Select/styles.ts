@@ -24,7 +24,6 @@ export const Container = styled(TouchableOpacity)<SelectStyleProps>`
     `};
 
     border-radius: 4px;
-    margin-right: 12px;
 
     align-items: center;
     justify-content: center;
