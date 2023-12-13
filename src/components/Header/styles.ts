@@ -1,9 +1,16 @@
-import styled, {css} from "styled-components/native";
+import styled, { css } from "styled-components/native";
 
-import { ArrowLeft} from 'phosphor-react-native';
-import { TouchableOpacity } from "react-native";
+import { ArrowLeft } from 'phosphor-react-native';
+import { TouchableOpacity, View } from "react-native";
 
-export const Container = styled.View`
+export type HeaderTypeStyleProps = 'DIET' | 'NOTDIET' | 'DEFAULT';
+
+type Props = {
+    type: HeaderTypeStyleProps;
+}
+
+
+export const Container = styled.View<Props>`
     width: 100%;
     padding: 12px 24px 52px 24px;
 
@@ -11,11 +18,11 @@ export const Container = styled.View`
     align-items: center;
     justify-content: center;
 
-    background-color: ${({theme})=> theme.COLORS.GRAY_300};
+    background-color: ${({ theme, type }) => type === 'DEFAULT' ? theme.COLORS.GRAY_300 : type === 'DIET' ? theme.COLORS.GREEN_LIGHT : theme.COLORS.RED_LIGHT};
 `;
 
 export const Title = styled.Text`
-        ${({theme})=> css`
+        ${({ theme }) => css`
         font-family: ${theme.FONT_FAMILY.BOLD};
         font-size: ${theme.FONT_SIZE.LG}px;
         color: ${theme.COLORS.GRAY_700};
@@ -28,7 +35,7 @@ export const BackButton = styled(TouchableOpacity)`
     left: 24px;
 `;
 
-export const Icon = styled(ArrowLeft).attrs(({theme})=>({
+export const Icon = styled(ArrowLeft).attrs(({ theme }) => ({
     size: 24,
     color: theme.COLORS.GRAY_600,
 }))``;

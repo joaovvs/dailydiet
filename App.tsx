@@ -14,6 +14,7 @@ import { Home } from "@screens/Home";
 import { Statistics } from "@screens/Statistics";
 import { Create } from "@screens/Create";
 import { Feedback } from "@screens/Feedback";
+import { Show } from "@screens/Show";
 
 import theme from "./src/theme";
 
@@ -33,7 +34,7 @@ export default function App() {
             backgroundColor="transparent"
             translucent
           />
-          <Feedback isDiet={true}/>
+          <Show/>
       </ThemeProvider>
     );
   }
