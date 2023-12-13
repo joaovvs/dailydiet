@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from 'styled-components/native';
 import { Loading } from "@components/Loading";
 
+
 import {
   useFonts,
   NunitoSans_400Regular,
@@ -11,6 +12,7 @@ import {
 
 import { Home } from "@screens/Home";
 import { Statistics } from "@screens/Statistics";
+import { Create } from "@screens/Create";
 
 import theme from "./src/theme";
 
@@ -24,13 +26,13 @@ export default function App() {
         </ThemeProvider>)
   } else{
     return (
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>      
           <StatusBar
             style="dark" 
             backgroundColor="transparent"
             translucent
           />
-          <Statistics/>
+          <Create/>
       </ThemeProvider>
     );
   }

@@ -15,7 +15,7 @@ import { useState,useEffect } from 'react';
 
 
 
-import { Header } from "@components/Header";
+import { HeaderLogo } from "@components/HeaderLogo";
 import { ButtonIcon } from "@components/ButtonIcon";
 import { MealCard } from "@components/MealCard";
 
@@ -91,7 +91,7 @@ export function Home(){
 
     return(
         <Container>
-            <Header/>
+            <HeaderLogo/>
             <Percent isDiet={percent>50 ? true: false}>
                 <Title>{`${percent}%`}</Title>
                 <Subtitle>das refeições dentro da dieta</Subtitle>

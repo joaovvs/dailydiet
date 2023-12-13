@@ -1,13 +1,16 @@
-import { Container, Logo, Portrait } from "./styles";
+import { Container, Title, BackButton, Icon } from "./styles";
 
-import logo from '@assets/logo.png'
-import portrait from '@assets/portrait.png'
+type Props = {
+    title: string;
+}
 
-export function Header(){
+export function Header({title}: Props){
     return(
         <Container>
-            <Logo source={logo}/>
-            <Portrait source={portrait}/>
+            <Title>{title}</Title>
+            <BackButton>
+                <Icon/>
+            </BackButton>
         </Container>
     );
 };
