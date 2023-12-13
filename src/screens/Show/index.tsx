@@ -1,4 +1,4 @@
-import { Header } from "@components/Header";
+import { useState } from 'react'
 import { 
     Container, 
     Content, 
@@ -7,16 +7,25 @@ import {
     TitleDateAndTime, 
     TitleMeal, 
     BackgroundTypeStyleProps } from "./styles";
-
+import { Header } from "@components/Header";
 import { ButtonIcon } from "@components/ButtonIcon";
 import { Tag } from "@components/Tag";
 
-import { View } from "react-native";
+import { Alert, View, Modal } from "react-native";
+
 
 
 
 
 export function Show(){
+
+    async function handleMealRemove(){
+        Alert.alert('Deseja realmente remover o registro de refeição?','', [
+            { text: 'Cancelar', style: 'cancel'},
+            {text: 'Sim, remover', onPress: () =>{}},
+        ]);
+    }
+
     return(
         <Container type={'NOTDIET'}>
             <Header title='Refeição' type={'NOTDIET'} />
@@ -32,11 +41,15 @@ export function Show(){
                     </View>
                     <Tag type="NOTDIET"/>
                 </Info>
+                
                 <View style={{gap: 8}}>
                     <ButtonIcon title='Editar refeição' type="edit"/>
-                    <ButtonIcon title='excluir refeição' type="remove"/>
+                    <ButtonIcon 
+                        title='excluir refeição' 
+                        type="remove"
+                        onPress={handleMealRemove}
+                        />
                 </View>
-
             </Content>
         </Container>
     );

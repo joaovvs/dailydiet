@@ -1,7 +1,7 @@
 import { TouchableOpacity } from "react-native";
 import styled, { css } from "styled-components/native";
 
-export type ButtonIconTypeStyleProps = 'add' |'edit' | 'remove' | 'none';
+export type ButtonIconTypeStyleProps = 'add' |'edit' | 'remove' |  'none';
 
 type Props = {
     type: ButtonIconTypeStyleProps

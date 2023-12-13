@@ -15,6 +15,7 @@ import { Statistics } from "@screens/Statistics";
 import { Create } from "@screens/Create";
 import { Feedback } from "@screens/Feedback";
 import { Show } from "@screens/Show";
+import { Edit } from "@screens/Edit";
 
 import theme from "./src/theme";
 
@@ -34,7 +35,7 @@ export default function App() {
             backgroundColor="transparent"
             translucent
           />
-          <Show/>
+          <Edit/>
       </ThemeProvider>
     );
   }
