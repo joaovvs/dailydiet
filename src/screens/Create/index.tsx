@@ -19,6 +19,7 @@ import { meal } from "src/@types/types";
 import { Alert } from "react-native";
 import { mealCreate } from "@storage/meal/mealCreate";
 import { AppError } from "@utils/AppError";
+import { mealsGetAll } from "@storage/meal/mealsGetAll";
 
 export function Create() {
   const [name, setName] = useState('');

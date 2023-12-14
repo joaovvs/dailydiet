@@ -1,3 +1,5 @@
+import { useState, useEffect,useCallback } from 'react';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import { 
     Container, 
@@ -19,25 +21,71 @@ import {
 
 import { meal } from "src/@types/types";
 
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { mealsGetAll } from "@storage/meal/mealsGetAll";
 
-type RouteParams = {
-    percent: number;
-}
 
 export function Statistics(){
+    const [meals, setMeals] = useState<meal []>([])
+    const [percent,setPercent] = useState(0);
     const navigation = useNavigation();
 
-    const route = useRoute();
-    const { percent } = route.params as RouteParams;
+
     
     function handleBack(){
         navigation.navigate('home');
     }
 
-    function countMeals(){
+    function calcPercent(){
+        const  countMeals = meals.length;
+        const mealNotInDiet = meals.filter(meal => meal.isDiet===true).length;
+        if(countMeals>0 && mealNotInDiet>0){
+           setPercent(Number((mealNotInDiet/countMeals*100).toFixed(2)));
+        }
+        if(countMeals>0 && mealNotInDiet===0){
+            setPercent(100);
+        }
+    }
 
+    function calcTotalMeals(){
+        return meals.length;
+    }
+
+    function calcGreaterSequence(){
+        let counter = 0;
+        let greaterSequence=0;
+
+        meals.map(meal => {
+            if(meal.isDiet===true){
+                counter++;
+                if(counter>greaterSequence){
+                    greaterSequence=counter;
+                }
+            }else{
+                counter=0;
+            }
+        })
+
+        return greaterSequence;
+    }
+
+    function calcTotalMealsByDiet(diet: boolean){
+        const filteredMeals = meals.filter(meal => meal.isDiet===diet)
+        return filteredMeals.length;
+    }
+
+
+    async function fetchMeals(){
+        const data= await mealsGetAll();
+        setMeals(data);
     } 
+
+    useFocusEffect(useCallback(()=>{
+        fetchMeals();
+    },[]));
+
+    useEffect(()=>{
+        calcPercent();
+    },[meals])
 
     return(
         <Container isDiet={percent > 50 ? true: false}>
@@ -53,20 +101,20 @@ export function Statistics(){
                 <Title>Estatísticas gerais</Title>
                 <Data>
                     <Sequence>
-                        <ValueTitle>22</ValueTitle>
+                        <ValueTitle>{calcGreaterSequence()}</ValueTitle>
                         <ValueSubtitle>melhor sequência de pratos dentro da dieta</ValueSubtitle>
                     </Sequence>
                     <Total>
-                        <ValueTitle>{}</ValueTitle>
+                        <ValueTitle>{calcTotalMeals()}</ValueTitle>
                         <ValueSubtitle>refeições registradas</ValueSubtitle>
                     </Total>
                     <Info>
                         <Success>
-                            <ValueTitle>99</ValueTitle>
+                            <ValueTitle>{calcTotalMealsByDiet(true)}</ValueTitle>
                             <ValueSubtitle>Refeições dentro da dieta</ValueSubtitle>
                         </Success>
                         <Fail>
-                            <ValueTitle>10</ValueTitle>
+                            <ValueTitle>{calcTotalMealsByDiet(false)}</ValueTitle>
                             <ValueSubtitle>Refeições fora da dieta</ValueSubtitle>
                         </Fail>
                     </Info>

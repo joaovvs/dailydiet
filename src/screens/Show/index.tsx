@@ -13,13 +13,17 @@ import { Tag } from "@components/Tag";
 
 import { Alert, View } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 
-
+type RouteParams = {
+    index: number;
+}
 
 export function Show(){
 
     const navigation = useNavigation();
+    const route = useRoute();
+    const { index } = route.params as RouteParams;
 
     function handleShowEdit(){
         navigation.navigate('edit');

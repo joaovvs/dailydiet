@@ -1,4 +1,4 @@
-import { useState,useCallback } from 'react';
+import { useState,useCallback, useEffect } from 'react';
 import { Alert, FlatList, View } from "react-native";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
@@ -22,7 +22,7 @@ import { mealsGetAll } from '@storage/meal/mealsGetAll';
 
 export function Home(){
     const [meals, setMeals] = useState<meal []>([]);
-    const [isDiet,setIsDiet] = useState(true);
+
     const navigation = useNavigation();
 
     const [percent, setPercent] = useState(0);
@@ -40,7 +40,7 @@ export function Home(){
 
     function fetchDayList(){
         const days = [...new Set(meals.map(meal => meal.date))];
-        setDayList(days.sort());
+        setDayList(days);
     }
 
 
@@ -48,7 +48,7 @@ export function Home(){
         const  countMeals = meals.length;
         const mealNotInDiet = meals.filter(meal => meal.isDiet===true).length;
         if(countMeals>0 && mealNotInDiet>0){
-            setPercent(mealNotInDiet/countMeals*100);
+            setPercent(Number((mealNotInDiet/countMeals*100).toFixed(2)));
         }
         if(countMeals>0 && mealNotInDiet===0){
                 setPercent(100);
@@ -56,11 +56,11 @@ export function Home(){
     }
 
     function handleShowStatistics(){
-        navigation.navigate('statistics', {percent});
+        navigation.navigate('statistics');
     } 
 
-    function handleShowMeal(){
-        navigation.navigate('show');
+    function handleShowMeal(index: number){
+        navigation.navigate('show', {index});
     }
 
     function handleNewMeal(){
@@ -70,10 +70,12 @@ export function Home(){
 
     useFocusEffect(useCallback(()=>{
         fetchMeals();
+    },[]));
+
+    useEffect(()=>{
         fetchDayList();
         calcPercent();
-        console.log(meals);
-    },[]));
+    },[meals]);
     
 
     return(
@@ -106,12 +108,12 @@ export function Home(){
                        <FlatList
                             data={ meals.filter(meal => meal.date==item) }
                             keyExtractor={(meal) => meal.name}
-                            renderItem={({ item })=> (
+                            renderItem={({ item, index })=> (
                                 <MealCard 
                                     name={item.name} 
                                     time={item.time}
                                     isDiet={item.isDiet}
-                                    handleShowMeal={handleShowMeal}
+                                    handleShowMeal={() => handleShowMeal(index)}
                                     />)}
                             />
                     </View>
