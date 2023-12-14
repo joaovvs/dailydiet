@@ -1,6 +1,6 @@
-import { useState,useEffect } from 'react';
+import { useState,useCallback } from 'react';
 import { Alert, FlatList, View } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import { Container, 
     Icon, 
@@ -18,50 +18,25 @@ import { HeaderLogo } from "@components/HeaderLogo";
 import { ButtonIcon } from "@components/ButtonIcon";
 import { MealCard } from "@components/MealCard";
 import { meal } from 'src/@types/types';
+import { mealsGetAll } from '@storage/meal/mealsGetAll';
 
 export function Home(){
-    const [meals, setMeals] = useState<meal []>([{
-        name: 'X-tudo',
-        description: 'Hamburguer',
-        date: '12/12/2022',
-        time: '20:00',
-        isDiet: false
-    },
-    {
-        name: 'Sanduíche',
-        description: 'Sanduiche natural',
-        date: '10/08/2022',
-        time: '16:00',
-        isDiet: true
-    },
-    {
-        name: 'Lasanha de frango com queijo',
-        description: 'Lasanha de frango',
-        date: '13/08/2023',
-        time: '12:30',
-        isDiet: true
-    },
-    {
-        name: 'Torta de chocolate',
-        description: 'saasdasdasdasdsa',
-        date: '13/08/2023',
-        time: '09:30',
-        isDiet: true
-    },
-    {
-        name: 'teste',
-        description: 'saasdasdasdasdsa',
-        date: '13/08/2023',
-        time: '09:30',
-        isDiet: false
-    }
-    ]);
+    const [meals, setMeals] = useState<meal []>([]);
     const [isDiet,setIsDiet] = useState(true);
     const navigation = useNavigation();
 
     const [percent, setPercent] = useState(0);
 
     const [dayList, setDayList] = useState<string []>([]);
+
+    async function fetchMeals(){
+        try {
+           const data = await mealsGetAll();
+           setMeals(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     function fetchDayList(){
         const days = [...new Set(meals.map(meal => meal.date))];
@@ -72,8 +47,12 @@ export function Home(){
      function calcPercent(){
         const  countMeals = meals.length;
         const mealNotInDiet = meals.filter(meal => meal.isDiet===true).length;
-        setPercent(mealNotInDiet/countMeals*100);
-
+        if(countMeals>0 && mealNotInDiet>0){
+            setPercent(mealNotInDiet/countMeals*100);
+        }
+        if(countMeals>0 && mealNotInDiet===0){
+                setPercent(100);
+        }
     }
 
     function handleShowStatistics(){
@@ -89,11 +68,12 @@ export function Home(){
     }
 
 
-    useEffect(()=>{
-
-        meals && fetchDayList();
+    useFocusEffect(useCallback(()=>{
+        fetchMeals();
+        fetchDayList();
         calcPercent();
-    },[])
+        console.log(meals);
+    },[]));
     
 
     return(
