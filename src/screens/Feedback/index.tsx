@@ -1,14 +1,28 @@
-import { Container, FeedbackArea, Title,Subtitle,BoldSubtitle } from "./styles";
-
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Image } from "react-native";
+
+
+import { Container, FeedbackArea, Title,Subtitle,BoldSubtitle } from "./styles";
+import { ButtonIcon } from "@components/ButtonIcon";
+
 import dietImg from '@assets/diet-illustration.png'
 import notDietImg from '@assets/notdiet-illustration.png'
-import { ButtonIcon } from "@components/ButtonIcon";
-import { useState } from "react";
 
+type RouteParams = {
+    isDiet: boolean;
+  };
 
 export function Feedback(){
-    const [isDiet, setIsDiet] = useState(false);
+
+    const route = useRoute();
+    const { isDiet } = route.params as RouteParams;
+
+    const navigation = useNavigation();
+
+    function handleGoHome(){
+        navigation.navigate('home');
+    }
+    
     function feedbackSubtitleText(){
         if(isDiet){
             return( 
@@ -42,7 +56,9 @@ export function Feedback(){
                 source={isDiet ? dietImg: notDietImg}
                 style={{marginVertical: 20}}
             />
-            <ButtonIcon title="Ir para a página inicial"/>
+            <ButtonIcon 
+                title="Ir para a página inicial"
+                onPress={handleGoHome}/>
         </Container>
     );
 };

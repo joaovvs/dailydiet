@@ -45,7 +45,9 @@ export function Create() {
       const newMeal: meal = {id, name, description, date, hour: hour, isDiet}
       try {
         await mealCreate(newMeal);
-        navigation.navigate('home');
+
+        navigation.navigate('feedback', {isDiet: newMeal.isDiet});
+        
       } catch (error) {
         console.log(error);
         throw new AppError('Não foi possível cadastrar a refeição');

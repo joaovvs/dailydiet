@@ -32,7 +32,7 @@ export const DateAndTime = styled.View`
 
 export const Diet = styled.View`
     flex: 1;
-    margin-bottom: 90px;
+    margin-bottom: 24px;
 `
 
 export const Options = styled.View`
