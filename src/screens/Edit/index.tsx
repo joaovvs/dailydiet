@@ -27,7 +27,7 @@ type RouteParams = {
 export function Edit() {
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(true);
   const [meal, setMeal] = useState<meal>({} as meal);
 
   const route = useRoute();
@@ -117,8 +117,8 @@ export function Edit() {
             </Options>
           </Diet>
           <ButtonIcon 
-          title="Salvar alterações" 
-          onPress={handleUpdate}/>
+            title="Salvar alterações"
+            onPress={handleUpdate}/>
         </Form>
       </Content>
     </Container>
