@@ -56,7 +56,7 @@ export function Create() {
     <Container>
       <Header title="Nova Refeição"></Header>
       <Content>
-        <Form>
+        <Form showsVerticalScrollIndicator={false}>
           <Input 
           title="Nome" 
           keyboardType="name-phone-pad"

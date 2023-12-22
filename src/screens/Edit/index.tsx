@@ -72,7 +72,7 @@ export function Edit() {
     <Container>
       <Header title="Editar refeição"></Header>
       <Content>
-        <Form>
+        <Form showsVerticalScrollIndicator={false}>
           <Input
             title="Nome"
             keyboardType="name-phone-pad"

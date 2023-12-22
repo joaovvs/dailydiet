@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { Text, Alert, SectionList } from "react-native";
+import { Text, Alert, SectionList, ScrollView } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import {
@@ -132,6 +132,7 @@ export function Home() {
           />
         </New>
       </Meals>
+     
     { isLoading ? 
       <Loading/> :
       <SectionList
@@ -145,7 +146,7 @@ export function Home() {
             }
           />
         )}
-        renderSectionHeader={({ section }) => <Text>{section.title}</Text>}
+        renderSectionHeader={({ section }) => <SectionTitle>{section.title}</SectionTitle>}
         contentContainerStyle={
           organizedList.length === 0 && {
             flex: 1,
@@ -153,6 +154,8 @@ export function Home() {
             alignItems: "center",
           }
         }
+        style={{flex: 1}}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <Text>Que tal cadastrar sua primeira refeição? </Text>
         )}

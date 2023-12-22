@@ -69,7 +69,7 @@ export const New = styled.View`
 
 export const SectionTitle = styled.Text`
         ${({theme})=> css`
-        font-family: ${theme.FONT_FAMILY.REGULAR};
+        font-family: ${theme.FONT_FAMILY.BOLD};
         font-size: ${theme.FONT_SIZE.MD}px;
         color: ${theme.COLORS.GRAY_700};
     `};

@@ -18,8 +18,7 @@ export const Content = styled.View`
     padding: 40px 24px;
 `
 export const Form = styled.ScrollView`
-    flex: 1;
-    
+    flex: 1; 
 `;
 
 export const DateAndTime = styled.View`
