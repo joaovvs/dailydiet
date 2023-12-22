@@ -17,11 +17,11 @@ O desafio consiste na criação de app para registrar as refeições do usuário
 
 ## Aprendizados
 
-- React native;
-- Uso de Styled Component com ReactNative;
-- Uso de AsyncStorage;
-- FlatList and SectionList;
-- TypeScript.
+- Estilização com Styled Component;
+- Armazenamento local com AsyncStorage;
+- Navegação com `React Navigation`
+- Utilização de FlatList e SectionList
+- Componentização
 
 
 ## Stack utilizada
