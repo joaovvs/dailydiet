@@ -1,124 +1,164 @@
-import { useState,useCallback, useEffect } from 'react';
-import { Alert, FlatList, View } from "react-native";
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useState, useCallback, useEffect } from "react";
+import { Text, Alert, SectionList } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
-import { Container, 
-    Icon, 
-    Meals, 
-    Open, 
-    Percent, 
-    Subtitle, 
-    Title,
-    New,
-    DayTitle,
-    SectionTitle } from "./styles";
-
+import {
+  Container,
+  Icon,
+  Meals,
+  Open,
+  Percent,
+  Subtitle,
+  Title,
+  New,
+  DayTitle,
+  SectionTitle,
+} from "./styles";
 
 import { HeaderLogo } from "@components/HeaderLogo";
 import { ButtonIcon } from "@components/ButtonIcon";
 import { MealCard } from "@components/MealCard";
-import { meal } from 'src/@types/types';
-import { mealsGetAll } from '@storage/meal/mealsGetAll';
+import { meal } from "src/@types/types";
 
-export function Home(){
-    const [meals, setMeals] = useState<meal []>([]);
+import { mealsGetAll } from "@storage/meal/mealsGetAll";
+import { Loading } from "@components/Loading";
 
-    const navigation = useNavigation();
+type SectionMeals = {
+  title: string;
+  data: meal[];
+};
 
-    const [percent, setPercent] = useState(0);
+export function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [meals, setMeals] = useState<meal[]>([]);
+  const [dayList, setDayList] = useState<string[]>([]);
+  const [organizedList, setOrganizedList] = useState<SectionMeals[]>([]);
 
-    const [dayList, setDayList] = useState<string []>([]);
+  const navigation = useNavigation();
 
-    async function fetchMeals(){
-        try {
-           const data = await mealsGetAll();
-           setMeals(data);
-        } catch (error) {
-            console.log(error);
-        }
+  function fetchSectionList() {
+    const list: SectionMeals[] = dayList.reduce(
+      (acc: SectionMeals[], title) => {
+        const mealsOfDay = meals.filter((meal) => meal.date === title);
+        const mealsOfDaySorted = mealsOfDay.sort((a,b) => a.hour.localeCompare(b.hour))
+        acc.push({ title, data: mealsOfDaySorted });
+
+        return acc;
+      },
+      []
+    );
+
+    setOrganizedList(list);
+  }
+
+  async function fetchMeals() {
+    try {
+      setIsLoading(true);
+      const data = await mealsGetAll();
+
+      const sortedMeals = [...data].sort((a, b) => a.date.localeCompare(b.date));
+      setMeals(sortedMeals);
+    } catch (error) {
+      console.log(error);
+    } finally{
+      setIsLoading(false);
     }
+  }
 
-    function fetchDayList(){
-        const days = [...new Set(meals.map(meal => meal.date))];
-        setDayList(days);
+  function fetchDayList() {
+    const days = [...new Set(meals.map((meal) => meal.date))];
+    setDayList(days);
+
+  }
+
+  function calcPercent() {
+    const countMeals = meals.length;
+    const mealNotInDiet = meals.filter((meal) => meal.isDiet === true).length;
+    if (countMeals > 0 && mealNotInDiet > 0) {
+      return Number(((mealNotInDiet / countMeals) * 100).toFixed(2));
     }
-
-
-     function calcPercent(){
-        const  countMeals = meals.length;
-        const mealNotInDiet = meals.filter(meal => meal.isDiet===true).length;
-        if(countMeals>0 && mealNotInDiet>0){
-            setPercent(Number((mealNotInDiet/countMeals*100).toFixed(2)));
-        }
-        if(countMeals>0 && mealNotInDiet===0){
-                setPercent(100);
-        }
+    if (countMeals > 0 && mealNotInDiet === 0) {
+      return 100;
     }
+    return 0;
+  }
 
-    function handleShowStatistics(){
-        navigation.navigate('statistics');
-    } 
+  function handleShowStatistics() {
+    navigation.navigate("statistics");
+  }
 
-    function handleShowMeal(index: number){
-        navigation.navigate('show', {index});
+  function handleShowMeal(id: string) {
+    navigation.navigate("show", { id });
+  }
+
+  function handleNewMeal() {
+    navigation.navigate("create");
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchMeals();
+    }, [])
+  );
+
+  useEffect(()=>{
+    if(meals){
+      fetchDayList();
     }
-
-    function handleNewMeal(){
-        navigation.navigate('create');
-    }
-
-
-    useFocusEffect(useCallback(()=>{
-        fetchMeals();
-    },[]));
-
-    useEffect(()=>{
-        fetchDayList();
-        calcPercent();
-    },[meals]);
     
+  },[meals]);
 
-    return(
-        <Container>
-            <HeaderLogo/>
-            <Percent isDiet={percent>50 ? true: false}>
-                <Title>{`${percent}%`}</Title>
-                <Subtitle>das refeições dentro da dieta</Subtitle>
-                <Open onPress={handleShowStatistics}>
-                    <Icon isDiet={percent>50 ? true: false}/>
-                </Open>
-            </Percent>
-            <Meals>
-                <New>
-                    <SectionTitle>Refeições</SectionTitle>
-                    <ButtonIcon 
-                        title="Nova refeição" 
-                        type='add'
-                        onPress={handleNewMeal}
-                    />
-                </New>
-            </Meals>
+  useEffect(()=>{
+    fetchSectionList();
+  },[dayList,meals])
 
-            <FlatList 
-                data={dayList}
-                keyExtractor={(item,index) => String(index)}
-                renderItem={({item})=> (
-                <View>
-                    <DayTitle>{item}</DayTitle>
-                       <FlatList
-                            data={ meals.filter(meal => meal.date==item) }
-                            keyExtractor={(meal) => meal.name}
-                            renderItem={({ item, index })=> (
-                                <MealCard 
-                                    name={item.name} 
-                                    time={item.time}
-                                    isDiet={item.isDiet}
-                                    handleShowMeal={() => handleShowMeal(index)}
-                                    />)}
-                            />
-                    </View>
-                    )}
-                    />  
-        </Container>
-    )
+  return (
+    <Container>
+      <HeaderLogo />
+      <Percent isDiet={calcPercent() > 50 ? true : false}>
+        <Title>{`${calcPercent()}%`}</Title>
+        <Subtitle>das refeições dentro da dieta</Subtitle>
+        <Open onPress={handleShowStatistics}>
+          <Icon isDiet={calcPercent() > 50 ? true : false} />
+        </Open>
+      </Percent>
+      <Meals>
+        <New>
+          <SectionTitle>Refeições</SectionTitle>
+          <ButtonIcon
+            title="Nova refeição"
+            type="add"
+            onPress={handleNewMeal}
+          />
+        </New>
+      </Meals>
+    { isLoading ? 
+      <Loading/> :
+      <SectionList
+        sections={organizedList}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <MealCard
+            data={item}
+            handleShowMeal={() =>
+              handleShowMeal(item.id)
+            }
+          />
+        )}
+        renderSectionHeader={({ section }) => <Text>{section.title}</Text>}
+        contentContainerStyle={
+          organizedList.length === 0 && {
+            flex: 1,
+            alignContent: "center",
+            alignItems: "center",
+          }
+        }
+        ListEmptyComponent={() => (
+          <Text>Que tal cadastrar sua primeira refeição? </Text>
+        )}
+      />
+    }
+
+    </Container>
+  );
 }

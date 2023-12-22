@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation} from '@react-navigation/native';
 
 import {
   Container,
@@ -19,7 +19,8 @@ import { meal } from "src/@types/types";
 import { Alert } from "react-native";
 import { mealCreate } from "@storage/meal/mealCreate";
 import { AppError } from "@utils/AppError";
-import { mealsGetAll } from "@storage/meal/mealsGetAll";
+
+
 
 export function Create() {
   const [name, setName] = useState('');
@@ -30,15 +31,23 @@ export function Create() {
 
   const navigation = useNavigation();
 
+
+
+
+
+
   async function handleNewMeal(){
       if(!name || !description || !date || !hour){
         return Alert.alert('Preencha todos os campos');
       }
-      const newMeal: meal = {name, description, date, time: hour, isDiet}
+      const id = Math.floor(Date.now() * Math.random()).toString(36);
+
+      const newMeal: meal = {id, name, description, date, hour: hour, isDiet}
       try {
         await mealCreate(newMeal);
         navigation.navigate('home');
       } catch (error) {
+        console.log(error);
         throw new AppError('Não foi possível cadastrar a refeição');
       }
   }

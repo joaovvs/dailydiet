@@ -25,8 +25,8 @@ import { mealsGetAll } from "@storage/meal/mealsGetAll";
 
 
 export function Statistics(){
-    const [meals, setMeals] = useState<meal []>([])
-    const [percent,setPercent] = useState(0);
+    const [meals, setMeals] = useState<meal []>([]);
+    
     const navigation = useNavigation();
 
 
@@ -39,11 +39,12 @@ export function Statistics(){
         const  countMeals = meals.length;
         const mealNotInDiet = meals.filter(meal => meal.isDiet===true).length;
         if(countMeals>0 && mealNotInDiet>0){
-           setPercent(Number((mealNotInDiet/countMeals*100).toFixed(2)));
+           return(Number((mealNotInDiet/countMeals*100).toFixed(2)));
         }
         if(countMeals>0 && mealNotInDiet===0){
-            setPercent(100);
+                return(100);
         }
+        return 0;
     }
 
     function calcTotalMeals(){
@@ -88,13 +89,13 @@ export function Statistics(){
     },[meals])
 
     return(
-        <Container isDiet={percent > 50 ? true: false}>
-            <Percent isDiet={percent > 50 ? true: false}>
-                <PercentTitle>{`${percent}%`}</PercentTitle>
+        <Container isDiet={calcPercent() > 50 ? true: false}>
+            <Percent isDiet={calcPercent() > 50 ? true: false}>
+                <PercentTitle>{`${calcPercent()}%`}</PercentTitle>
                 <PercentSubtitle>das refeições dentro da dieta</PercentSubtitle>
                 <BackButton
                     onPress={handleBack}>
-                    <Icon isDiet={percent > 50 ? true: false}/>
+                    <Icon isDiet={calcPercent() > 50 ? true: false}/>
                 </BackButton>
             </Percent>
             <Content>

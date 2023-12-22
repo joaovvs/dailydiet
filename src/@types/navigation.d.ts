@@ -5,14 +5,16 @@ export declare global {
         interface RootParamList{
             home: undefined;
             statistics: undefined;
-            create: undefined;
+            create:undefined;
             feedback: {
                 isDiet: boolean;
             }
             show: { 
-                index: number;
+                id:string;
             };
-            edit: undefined;
+            edit: {
+                id: string;
+            };
         }
     }
 }

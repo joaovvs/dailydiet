@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
+import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
+
 import { 
     Container, 
     Content, 
@@ -13,44 +15,66 @@ import { Tag } from "@components/Tag";
 
 import { Alert, View } from "react-native";
 
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { mealRemove } from '@storage/meal/mealDelete';
+import { mealsGetById } from '@storage/meal/mealsGetById';
+import { meal } from 'src/@types/types';
+
 
 type RouteParams = {
-    index: number;
+    id: string;
 }
 
 export function Show(){
-
+    const [meal,setMeal] = useState<meal>();
     const navigation = useNavigation();
     const route = useRoute();
-    const { index } = route.params as RouteParams;
+    const { id } = route.params as RouteParams;
 
     function handleShowEdit(){
-        navigation.navigate('edit');
+        navigation.navigate('edit', {id});
     }
 
-    async function handleMealRemove(){
+    async function handleMealRemove(id: string){
         Alert.alert('Deseja realmente remover o registro de refeição?','', [
             { text: 'Cancelar', style: 'cancel'},
-            {text: 'Sim, remover', onPress: () =>{}},
+            {text: 'Sim, remover', onPress: async () =>  {
+                await mealRemove(id);
+                Alert.alert('Refeição removida com sucesso');
+                navigation.navigate('home');
+            }},
         ]);
     }
 
+    async function fetchMeal(){
+
+        try {
+            const mealSelected = await mealsGetById(id);
+
+            setMeal(mealSelected);
+        } catch (error) {
+            throw error;
+        }
+      
+    }
+
+    useEffect(()=>{
+        fetchMeal();
+    },[]);
 
     return(
-        <Container type={'NOTDIET'}>
-            <Header title='Refeição' type={'NOTDIET'} />
+        <Container type={meal?.isDiet? 'DIET': 'NOTDIET'}>
+            <Header title='Refeição' type={meal?.isDiet? 'DIET': 'NOTDIET'} />
             <Content>
                 <Info>
                     <View style={{gap: 8}}>
-                        <TitleMeal>Sanduíche</TitleMeal>
-                        <TextContent>Sanduíche de pão integral com atum e salada de alface e tomate</TextContent>
+                        <TitleMeal>{meal?.name}</TitleMeal>
+                        <TextContent>{meal?.description}</TextContent>
                     </View>
                     <View style={{gap: 8}}>
                         <TitleDateAndTime>Data e hora</TitleDateAndTime>
-                        <TextContent>12/08/2022 às 16:00</TextContent>
+                        <TextContent>{meal?.date} às {meal?.hour}</TextContent>
                     </View>
-                    <Tag type="NOTDIET"/>
+                    <Tag type={meal?.isDiet? 'DIET': 'NOTDIET'}/>
                 </Info>
 
                 <View style={{gap: 8}}>
@@ -63,7 +87,7 @@ export function Show(){
                     <ButtonIcon 
                         title='excluir refeição' 
                         type="remove"
-                        onPress={handleMealRemove}
+                        onPress={()=> meal && handleMealRemove(meal.id)}
                         />
                 </View>
             </Content>
